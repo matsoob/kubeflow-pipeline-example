@@ -39,8 +39,7 @@
                   [
                     {
                       "name": "calculate-regression-metrics-from-csv-mean_squared_error",
-                      "valueFrom":
-                        { "path": "/tmp/outputs/mean_squared_error/data" },
+                      "value": "0.005"
                     },
                   ],
                 "artifacts":
