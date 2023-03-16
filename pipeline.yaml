@@ -44,22 +44,6 @@
                   ],
                 "artifacts":
                   [
-                    {
-                      "name": "calculate-regression-metrics-from-csv-max_absolute_error",
-                      "path": "/tmp/outputs/max_absolute_error/data",
-                    },
-                    {
-                      "name": "calculate-regression-metrics-from-csv-mean_absolute_error",
-                      "path": "/tmp/outputs/mean_absolute_error/data",
-                    },
-                    {
-                      "name": "calculate-regression-metrics-from-csv-mean_squared_error",
-                      "path": "/tmp/outputs/mean_squared_error/data",
-                    },
-                    {
-                      "name": "calculate-regression-metrics-from-csv-root_mean_squared_error",
-                      "path": "/tmp/outputs/root_mean_squared_error/data",
-                    },
                   ],
               },
             "metadata":
@@ -88,19 +72,10 @@
                     "python3",
                     "-u",
                     "-c",
-                    "def calculate_regression_metrics_from_csv(\n    true_values_path,\n    predicted_values_path,\n):\n    '''Calculates regression metrics.\n\n    Annotations:\n        author: Alexey Volkov \u003calexey.volkov@ark-kun.com\u003e\n    '''\n    import math\n    import numpy\n\n    true_values = numpy.loadtxt(true_values_path, dtype=numpy.float64)\n    predicted_values = numpy.loadtxt(predicted_values_path, dtype=numpy.float64)\n\n    if len(predicted_values.shape) != 1:\n        raise NotImplemented('Only single prediction values are supported.')\n    if len(true_values.shape) != 1:\n        raise NotImplemented('Only single true values are supported.')\n\n    if predicted_values.shape != true_values.shape:\n        raise ValueError('Input shapes are different: {} != {}'.format(predicted_values.shape, true_values.shape))\n\n    num_true_values = true_values\n    errors = (true_values - predicted_values)\n    abs_errors = numpy.abs(errors)\n    squared_errors = errors ** 2\n    max_absolute_error = numpy.max(abs_errors)\n    mean_absolute_error = numpy.average(abs_errors)\n    mean_squared_error = numpy.average(squared_errors)\n    root_mean_squared_error = math.sqrt(mean_squared_error)\n\n    return (\n        max_absolute_error,\n        mean_absolute_error,\n        mean_squared_error,\n        root_mean_squared_error,\n    )\n\ndef _serialize_float(float_value: float) -\u003e str:\n    if isinstance(float_value, str):\n        return float_value\n    if not isinstance(float_value, (float, int)):\n        raise TypeError('Value \"{}\" has type \"{}\" instead of float.'.format(str(float_value), str(type(float_value))))\n    return str(float_value)\n\nimport argparse\n_parser = argparse.ArgumentParser(prog='Calculate regression metrics from csv', description='Calculates regression metrics.\\n\\n    Annotations:\\n        author: Alexey Volkov \u003calexey.volkov@ark-kun.com\u003e')\n_parser.add_argument(\"--true-values\", dest=\"true_values_path\", type=str, required=True, default=argparse.SUPPRESS)\n_parser.add_argument(\"--predicted-values\", dest=\"predicted_values_path\", type=str, required=True, default=argparse.SUPPRESS)\n_parser.add_argument(\"----output-paths\", dest=\"_output_paths\", type=str, nargs=4)\n_parsed_args = vars(_parser.parse_args())\n_output_files = _parsed_args.pop(\"_output_paths\", [])\n\n_outputs = calculate_regression_metrics_from_csv(**_parsed_args)\n\n_output_serializers = [\n    _serialize_float,\n    _serialize_float,\n    _serialize_float,\n    _serialize_float,\n\n]\n\nimport os\nfor idx, output_file in enumerate(_output_files):\n    try:\n        os.makedirs(os.path.dirname(output_file))\n    except OSError:\n        pass\n    with open(output_file, 'w') as f:\n        f.write(_output_serializers[idx](_outputs[idx]))\n",
+                    "print('hello world')"
                   ],
                 "args":
                   [
-                    "--true-values",
-                    "/tmp/inputs/true_values/data",
-                    "--predicted-values",
-                    "/tmp/inputs/predicted_values/data",
-                    "----output-paths",
-                    "/tmp/outputs/max_absolute_error/data",
-                    "/tmp/outputs/mean_absolute_error/data",
-                    "/tmp/outputs/mean_squared_error/data",
-                    "/tmp/outputs/root_mean_squared_error/data",
                   ],
                 "resources": {},
               },
